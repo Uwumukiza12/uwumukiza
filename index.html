@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="footer.css">
+    <title>Fetch API sandbox</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    
+</head>
+<body>
+
+    <div class="header">
+        <div class="head-title">
+            <h3>Think and Build Technology</h3>
+            <p><em>TBT group for developers of 2018-end of the world</em></p>
+        </div>
+        <nav>
+        <div class="topnav">
+            <a href="tbtHome.html">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <a href="#register">signUp</a>
+            <a href="loginForm.html">Login</a>
+            <a href="#about">About</a>
+          </div>
+        </nav>
+    
+
+<div class="container">
+    <h1 class="display-4 mb-4">Submit a message</h1>
+<div class="d-flex">
+    <button class="btn btn-primary mr-4" id="getText">get text</button>
+    <button class="btn btn-success mr-4" id="getUsers">get json</button> 
+    <button class="btn btn-warning mr-4" id="getPost">get API Data</button>
+</div>
+    <hr color="red">
+    <div id="output"></div>
+    <form action="" id="addPost">
+        <div class="form-group">
+            <input type="text" id="title" class="form-control" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <textarea name="txt" id="body" cols="30" rows="10" class="form-control" placeholder="Body"></textarea>
+        </div>
+        <input type="submit" value="submit" class="btn btn-primary">
+    </form>
+
+</div>
+
+    <script>
+        document.getElementById('getText').addEventListener('click', getText);
+        document.getElementById('getUsers').addEventListener('click', getUsers);
+        document.getElementById('getPost').addEventListener('click', getPosts);
+        document.getElementById('addPost').addEventListener('submit', addPost);
+
+        function getText(){
+            fetch('message.txt')
+            .then((res)=> res.text())
+            .then((data)=>{
+                document.getElementById('output').innerHTML=data;
+            })
+           
+        }
+
+        function getUsers(){
+            fetch('users.json')
+            .then((res)=> res.json())
+            .then((data)=>{
+                let output = '<h2 class="mb-4">Users</h2>';
+                data.forEach(user => {
+                    output +=`
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item">ID:${user.id}</li>
+                        <li class="list-group-item">Name:${user.name}</li>
+                        <li class="list-group-item">Email:${user.username}</li>
+                    </ul>
+                    `;
+                });
+                document.getElementById("output").innerHTML=output;
+            });
+            
+        }
+        //document.getElementById("output").innerHTML=output;
+        function getPosts(){
+            fetch('http://localhost:4000/posts')
+            .then((res)=> res.json())
+            .then((data)=>{
+                let result = '<h2 class="mb-3">POSTS</h2>';
+                data.forEach(post => {
+                    result +=`
+                    <div class="card mb-3" style="max-width: 18rem;">
+                   <div class="card-body text-success mb-3">
+                     <h3>${post.title}</h3>
+                     <p>${post.description}</p> 
+                   </div>
+                </div>
+                    `;
+                });
+                document.getElementById("output").innerHTML=result;
+            });
+            
+        }
+        function addPost(e){
+            e.preventDefault();
+            let title= document.getElementById('title').value;
+            let description= document.getElementById('body').value;
+            
+            fetch('http://localhost:4000/posts', {
+                method:'POST',
+                headers:{
+                    'Accept':'application/json, text/plain, */*',
+                    'content-type':'application/json'
+                },
+                body:JSON.stringify({title, description})
+            })
+            .then((res)=> res.json())
+            .then((data)=>console.log(data))
+        }
+       
+    </script>
+
+<div id="fixedFooter">
+    <h1 class="contacts">contacts</h1>
+    <pre>
+         tel <br> 017825056 
+    </pre>
+
+</div>
+</body>
+</html>
